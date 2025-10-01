@@ -1,0 +1,10 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Safe zone padding -->
+  <rect width="512" height="512" fill="transparent"/>
+  <!-- The actual icon content, scaled down to fit within the safe zone (approx 80% of total size) -->
+  <g transform="translate(51.2, 51.2) scale(0.8)">
+    <path d="M256 512C397.385 512 512 397.385 512 256C512 114.615 397.385 0 256 0C114.615 0 0 114.615 0 256C0 397.385 114.615 512 256 512Z" fill="black"/>
+    <path d="M228.857 128C194.857 130.667 154.524 162.2 159.238 226.4C163.952 290.6 221.714 364.8 296.762 364.8C371.81 364.8 402.667 301.867 393.143 256C383.619 210.133 323.81 169.6 276.571 185.6" stroke="#FACC15" stroke-width="24" stroke-linecap="round"/>
+    <path d="M307.429 112L323.81 70.4L366.19 86.8L350.59 128.8L307.429 112Z" fill="#FACC15"/>
+  </g>
+</svg>

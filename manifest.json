@@ -1,0 +1,31 @@
+{
+  "short_name": "Ton Profil IA",
+  "name": "Ton Profil IA: Générateur de Portraits & Avatars",
+  "description": "Réinventez votre image à travers des dizaines de thèmes créatifs. Téléchargez votre photo pour vous découvrir dans différentes carrières, époques historiques, univers fantastiques et styles artistiques.",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/index.html?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#3a2e27",
+  "background_color": "#211a15"
+}
