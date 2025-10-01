@@ -51,6 +51,7 @@ function App() {
     const [zoomedCard, setZoomedCard] = useState<{ url: string; themeName: string } | null>(null);
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
     const [remainingGenerations, setRemainingGenerations] = useState(MAX_GENERATIONS);
+    const [showFreeTierWarning, setShowFreeTierWarning] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const deskRef = useRef<HTMLDivElement>(null);
 
@@ -68,6 +69,14 @@ function App() {
             setRemainingGenerations(MAX_GENERATIONS);
         }
     }, []);
+
+    // Afficher l'avertissement sur les limitations du plan gratuit après le premier échec de quota
+    useEffect(() => {
+        const hasQuotaExhaustedError = Object.values(generatedImages).some(img => img.error === 'QUOTA_EXHAUSTED');
+        if (hasQuotaExhaustedError && !showFreeTierWarning) {
+            setShowFreeTierWarning(true);
+        }
+    }, [generatedImages, showFreeTierWarning]);
 
     const processImageGeneration = useCallback(async (imageDataUrl: string, preset: Preset, selectedGender: Gender) => {
         const deskBounds = deskRef.current?.getBoundingClientRect();
@@ -102,9 +111,17 @@ function App() {
         } catch (err) {
             const error = err as Error;
             console.error(`Failed to generate image for theme "${preset.name}":`, error);
+            
+            // Vérifier si c'est une erreur de quota épuisé
+            const isQuotaExhausted = error.message.startsWith('QUOTA_EXHAUSTED:');
+            
             setGeneratedImages(prev => ({
                 ...prev,
-                [preset.name]: { ...prev[preset.name]!, status: 'error', error: error.message },
+                [preset.name]: { 
+                    ...prev[preset.name]!, 
+                    status: 'error', 
+                    error: isQuotaExhausted ? 'QUOTA_EXHAUSTED' : error.message 
+                },
             }));
         }
     }, []);

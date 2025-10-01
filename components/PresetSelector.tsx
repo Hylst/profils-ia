@@ -6,14 +6,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Preset, PresetCategory } from '../presets';
 import { cn } from '../lib/utils';
-
-type Gender = 'male' | 'female';
-type ImageStatus = 'pending' | 'done' | 'error';
-interface GeneratedImage {
-    status: ImageStatus;
-    url?: string;
-    error?: string;
-}
+import { Gender, ImageStatus, GeneratedImage } from '../types';
 
 interface PresetSelectorProps {
     categories: PresetCategory[];

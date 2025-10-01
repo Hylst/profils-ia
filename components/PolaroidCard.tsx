@@ -4,6 +4,7 @@
 */
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ImageStatus } from '../types';
 
 type ImageStatus = 'pending' | 'done' | 'error';
 
@@ -43,13 +44,35 @@ const PolaroidCard: React.FC<PolaroidCardProps> = ({ imageUrl, themeName, status
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="absolute inset-0 flex flex-col items-center justify-center bg-red-800/90 text-white p-4 text-center"
+                            className={`absolute inset-0 flex flex-col items-center justify-center text-white p-4 text-center ${
+                                error === 'QUOTA_EXHAUSTED' ? 'bg-orange-600/90' : 'bg-red-800/90'
+                            }`}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-2" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
-                            <p className="font-bold text-sm">Échec de la génération</p>
-                            <p className="text-xs mt-1">{error}</p>
+                            {error === 'QUOTA_EXHAUSTED' ? (
+                                <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                                    </svg>
+                                    <p className="font-bold text-sm">Quota épuisé</p>
+                                    <p className="text-xs mt-1 mb-2">Votre quota Gemini API gratuit est épuisé</p>
+                                    <a 
+                                        href="https://ai.google.dev/pricing" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-colors"
+                                    >
+                                        Passer au plan payant
+                                    </a>
+                                </>
+                            ) : (
+                                <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    <p className="font-bold text-sm">Échec de la génération</p>
+                                    <p className="text-xs mt-1">{error}</p>
+                                </>
+                            )}
                         </motion.div>
                     )}
 

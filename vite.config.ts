@@ -23,10 +23,22 @@ export default defineConfig(({ mode }) => {
               'framer-motion': ['framer-motion'],
               'react-vendor': ['react', 'react-dom']
             }
+          },
+          // Supprimer les avertissements concernant les directives "use client" de framer-motion
+          onwarn(warning, warn) {
+            // Ignorer les avertissements sur les directives "use client" de framer-motion
+            if (warning.code === 'MODULE_LEVEL_DIRECTIVE' && 
+                warning.message.includes('use client') && 
+                warning.id?.includes('framer-motion')) {
+              return;
+            }
+            warn(warning);
           }
         },
         chunkSizeWarningLimit: 1000
       },
+      // Copier les fichiers du dossier public vers le build
+      publicDir: 'public',
       // Configuration pour gérer les directives "use client" de framer-motion
       ssr: {
         noExternal: ['framer-motion']

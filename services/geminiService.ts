@@ -110,7 +110,16 @@ async function callGeminiWithRetry(imagePart: object, textPart: object): Promise
             
             const isRateLimitError = errorMessage.includes('"code":429') || errorMessage.includes('RESOURCE_EXHAUSTED');
             if (isRateLimitError) {
-                // Extraire le délai de retry de l'erreur si disponible
+                // Vérifier si le quota est complètement épuisé (limit: 0)
+                const isQuotaExhausted = errorMessage.includes('limit: 0');
+                
+                if (isQuotaExhausted) {
+                    // Quota complètement épuisé - pas de retry
+                    console.log('Quota completely exhausted (limit: 0). No retry attempts will be made.');
+                    throw new Error(`QUOTA_EXHAUSTED: Votre quota Gemini API est épuisé. Les clés API gratuites ne supportent pas la génération d'images. Vous devez passer à un plan payant pour utiliser cette fonctionnalité. Visitez https://ai.google.dev/pricing pour plus d'informations.`);
+                }
+                
+                // Quota temporairement dépassé - retry possible
                 const retryMatch = errorMessage.match(/retry in (\d+(?:\.\d+)?)s/);
                 const retryDelay = retryMatch ? Math.ceil(parseFloat(retryMatch[1]) * 1000) : 60000; // 60s par défaut
                 
