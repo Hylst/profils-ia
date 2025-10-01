@@ -80,7 +80,7 @@ function processGeminiResponse(response: GenerateContentResponse): string {
 }
 
 /**
- * A wrapper for the Gemini API call that includes a retry mechanism for internal server errors.
+ * A wrapper for the Gemini API call that includes a retry mechanism for internal server errors and quota limits.
  * @param imagePart The image part of the request payload.
  * @param textPart The text part of the request payload.
  * @returns The GenerateContentResponse from the API.
@@ -110,7 +110,17 @@ async function callGeminiWithRetry(imagePart: object, textPart: object): Promise
             
             const isRateLimitError = errorMessage.includes('"code":429') || errorMessage.includes('RESOURCE_EXHAUSTED');
             if (isRateLimitError) {
-                throw new Error("Vous avez dépassé votre quota d'utilisation. Veuillez attendre un peu avant de réessayer.");
+                // Extraire le délai de retry de l'erreur si disponible
+                const retryMatch = errorMessage.match(/retry in (\d+(?:\.\d+)?)s/);
+                const retryDelay = retryMatch ? Math.ceil(parseFloat(retryMatch[1]) * 1000) : 60000; // 60s par défaut
+                
+                if (attempt < maxRetries) {
+                    console.log(`Quota exceeded. Retrying in ${retryDelay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                    continue;
+                } else {
+                    throw new Error(`Quota d'utilisation dépassé. L'API Gemini indique d'attendre ${Math.ceil(retryDelay/1000)} secondes avant de réessayer. Veuillez patienter ou vérifier votre plan de facturation.`);
+                }
             }
 
             const isInternalError = errorMessage.includes('"code":500') || errorMessage.includes('INTERNAL');
